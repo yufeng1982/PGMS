@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepairOrder_subreport" pageWidth="584" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="584" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c48a8e60-0488-48b8-9e1a-9ef39196fa09">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="repairOrderId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     repair_approve_opinions.approve_result AS approve_result,
+     repair_approve_opinions.comlete_time AS comlete_time,
+     repair_approve_opinions.opinions AS opinions,
+     repair_approve_opinions.task_name AS task_name,
+     repair_approve_opinions.task_id AS task_id,
+     repair_approve_opinions.response_people AS response_people
+FROM
+     project.repair_approve_opinions repair_approve_opinions
+
+where repair_approve_opinions.repair_order=$P{repairOrderId}]]>
+	</queryString>
+	<field name="approve_result" class="java.lang.String"/>
+	<field name="comlete_time" class="java.sql.Timestamp"/>
+	<field name="opinions" class="java.lang.String"/>
+	<field name="task_name" class="java.lang.String"/>
+	<field name="task_id" class="java.lang.String"/>
+	<field name="response_people" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="132" height="20" uuid="d5b770e4-3245-4d91-94cd-a87d247ad8b1"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{task_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="132" y="0" width="58" height="20" uuid="aa30a453-dd31-4898-a3ec-e0dfab2bcda6"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.photo.pgm.core.utils.ReportUtils.getApproveResult($F{approve_result})]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd HH:ss:mm" isBlankWhenNull="true">
+				<reportElement x="190" y="0" width="108" height="20" uuid="3a12a8a3-6056-4334-8f1d-eac64fb56ea0"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comlete_time}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="298" y="0" width="58" height="20" uuid="8f580591-7ced-492f-ba54-abacc08cf7d0"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{response_people}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="356" y="0" width="228" height="20" uuid="03861c7e-6b87-4ed0-ae45-9fe9196c168c"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{opinions}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

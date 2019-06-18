@@ -1,0 +1,27 @@
+1.修改server端web.xml, 
+添加以下配置，去掉页面多余空白
+<init-param>
+    <param-name>trimSpaces</param-name>
+    <param-value>true</param-value>
+</init-param>
+
+2.修改工程端web.xml, development 换成  production 
+<context-param>
+  <param-name>spring.profiles.active</param-name>
+  <param-value>production</param-value>
+</context-param>
+
+3.修改工程段 log4j.xml 修改 <param name="File" value="D:/projectOutPut.log" /> 到服务器自己指定的目录
+<appender name="logFile" class="org.apache.log4j.DailyRollingFileAppender">    
+    <param name="File" value="D:/projectOutPut.log" />  
+    <param name="Append" value="true" />  
+    <param name="MaxBackupIndex" value="10" />  
+    <layout class="org.apache.log4j.PatternLayout">  
+        <param name="ConversionPattern" value="%p (%c:%L)- %m%n  %l " />  
+    </layout>  
+</appender>
+
+4.修改app-setting-production.properties， 修改成服务器端的 数据库连接用户名和密码，并修改连接数据库名和端口号
+dbc.password=dl123
+jdbc.url=jdbc\:postgresql\://localhost\:5433/PROJECTMS
+jdbc.username=postgres

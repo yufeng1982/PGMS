@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.pgm.web</groupId>
+	<artifactId>PGMWeb</artifactId>
+	<packaging>war</packaging>
+	<name>PGM Web</name>
+	<description>PGM Web</description>
+  
+	<dependencies>
+		<dependency>
+			<groupId>com.pgm</groupId>
+			<artifactId>PGMCore</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	
+	<parent>
+		<groupId>com.general</groupId>
+		<artifactId>BASCoreLib</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../TBSCoreLib/pom.xml</relativePath>
+	</parent>
+	
+  	<properties>
+		<!-- Plugin  -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.7</jdk.version>
+		<sitemesh.version>2.4.2</sitemesh.version>
+	</properties>
+  	<build>
+		<plugins>
+			<!-- compiler JDK version setting -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			
+			<!-- eclipse plugin, set the wtp version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+					<wtpversion>2.0</wtpversion>
+					<!-- encoding -->
+					<additionalConfig>
+						<file>
+							<name>.settings/org.eclipse.core.resources.prefs</name>
+							<content>eclipse.preferences.version=1${line.separator}encoding/&lt;project&gt;=${project.build.sourceEncoding}${line.separator}</content>
+						</file>
+					</additionalConfig>
+				</configuration>
+			</plugin>
+		</plugins>
+		<defaultGoal>install</defaultGoal>
+	</build>
+	
+</project>

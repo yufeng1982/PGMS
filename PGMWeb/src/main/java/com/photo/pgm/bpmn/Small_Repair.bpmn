@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="SmallRepair" name="小维修审批" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <userTask id="S000001" name="维修工程师审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="S000002" name="区域经理/维修技师审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="S000003" name="油站经理/维修技师响应">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="S000004" name="油站经理确认">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="S000001"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="S000001" targetRef="S000002"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="S000002" targetRef="S000003"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="S000003" targetRef="S000004"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="S000004" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_SmallRepair">
+    <bpmndi:BPMNPlane bpmnElement="SmallRepair" id="BPMNPlane_SmallRepair">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="80.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="870.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="S000001" id="BPMNShape_S000001">
+        <omgdc:Bounds height="71.0" width="105.0" x="190.0" y="122.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="S000002" id="BPMNShape_S000002">
+        <omgdc:Bounds height="71.0" width="105.0" x="360.0" y="122.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="S000003" id="BPMNShape_S000003">
+        <omgdc:Bounds height="71.0" width="105.0" x="540.0" y="122.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="S000004" id="BPMNShape_S000004">
+        <omgdc:Bounds height="71.0" width="105.0" x="720.0" y="122.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="115.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="190.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="295.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="360.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="465.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="540.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="645.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="720.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="825.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="870.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

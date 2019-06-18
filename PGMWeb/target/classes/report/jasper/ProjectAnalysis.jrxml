@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProjectAnalysis" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" resourceBundle="/report/report" uuid="bcba6e61-3f6d-4617-b707-94877d667380">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<subDataset name="ChartDataSet" uuid="f366219f-183b-42c5-8b6d-6ae72b3c68c2">
+		<parameter name="chartProjectId" class="java.lang.String"/>
+		<parameter name="queryParams" class="java.lang.String">
+			<defaultValueExpression><![CDATA[com.photo.pgm.core.utils.ReportSQLUtils.getProjectAnalysisConditions($P{chartProjectId})]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select
+'已付款' as pay_type,
+sum(c.pay_amount) / sum(c.amount + adjust_amount) * 100 as paid_percent
+from project.contract c
+left join project.petrol_station p on c.project = p.id
+where c.active ='T' and c.contract_status='PendingArchive' $P!{queryParams}
+union
+select
+'未付款' as pay_type,
+sum(c.amount + adjust_amount - c.pay_amount) / sum(c.amount + adjust_amount) * 100 as paid_percent
+from project.contract c
+left join project.petrol_station p on c.project = p.id
+where c.active ='T' and c.contract_status='PendingArchive' $P!{queryParams}]]>
+		</queryString>
+		<field name="pay_type" class="java.lang.String"/>
+		<field name="paid_percent" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="projectId" class="java.lang.String"/>
+	<parameter name="queryParams" class="java.lang.String">
+		<defaultValueExpression><![CDATA[com.photo.pgm.core.utils.ReportSQLUtils.getProjectAnalysisConditions($P{projectId})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+p.name,
+count(*) as c_count,
+sum(c.amount) as amount,
+sum(c.amount + adjust_amount) as settle_amount,
+sum(c.pay_amount) as pay_amount,
+sum(c.amount + adjust_amount - c.pay_amount) as un_paid_amount,
+sum(c.amount + adjust_amount - c.pay_amount) / sum(c.amount + adjust_amount) * 100 as un_paid_amount_percent
+from project.contract c
+left join project.petrol_station p on c.petrol_station = p.id
+where c.active ='T' and c.contract_status='PendingArchive' $P!{queryParams}
+group by p.name order by p.name]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="c_count" class="java.lang.Long"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="settle_amount" class="java.lang.Double"/>
+	<field name="pay_amount" class="java.lang.Double"/>
+	<field name="un_paid_amount" class="java.lang.Double"/>
+	<field name="un_paid_amount_percent" class="java.lang.Double"/>
+	<variable name="c_count_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{c_count}]]></variableExpression>
+	</variable>
+	<variable name="amount_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="settle_amount_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{settle_amount}]]></variableExpression>
+	</variable>
+	<variable name="un_paid_amount_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{un_paid_amount}]]></variableExpression>
+	</variable>
+	<variable name="pay_amount_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay_amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="62" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="585" height="62" uuid="bfbf8bb5-6cbc-4f08-bfea-6289641b5bad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="仿宋" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ProjectAnalysis}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="375" y="0" width="70" height="20" uuid="30b31af8-f752-4ded-859e-1c156bdae6e9">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.PayAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="287" y="0" width="88" height="20" uuid="b525ba04-5b0b-4231-9391-de0152667c53">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.CSettleAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="196" y="0" width="91" height="20" uuid="98e803e0-10c4-4650-9ed6-22122f80b72a">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.CAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="36" y="0" width="100" height="20" uuid="efa069e1-7b82-4ded-8873-ad4f7b061825">
+					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ProjectName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="445" y="0" width="70" height="20" uuid="9c3ae648-28ed-49d5-8dc8-e24464755e7c">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.CUnPaidAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="515" y="0" width="70" height="20" uuid="57dfcef2-b0a7-4af1-b53b-f918847cb7d1">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.UnPaidPercent}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="136" y="0" width="60" height="20" uuid="736a751c-547a-4950-bf85-fdb41c4c9825">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ContractCounts}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="36" height="20" uuid="e8649f99-1e09-45cc-ad35-1bce9c5ff535"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SEQ}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="36" y="0" width="100" height="20" uuid="dbec77dd-947d-416f-94c6-3619985a8d21">
+					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="136" y="0" width="60" height="20" uuid="2cfcc38e-0d33-4847-955a-e9f6cda1229e">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{c_count}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="196" y="0" width="91" height="20" uuid="70e735a6-3a3b-4159-a0d8-ff643f1bfc3b">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="287" y="0" width="88" height="20" uuid="871eaf9d-f98f-4d61-b19c-784a6fdce4d8">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{settle_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="375" y="0" width="70" height="20" uuid="8d0bd4eb-608f-4757-adbf-163818ffe5a9">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{pay_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="445" y="0" width="70" height="20" uuid="7e7736d5-5769-4044-b7fd-0b580ecc3839">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{un_paid_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="515" y="0" width="70" height="20" uuid="3b61ca8f-a39f-46d9-a585-4ea4d05a8aa0">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{un_paid_amount_percent})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="36" height="20" isRemoveLineWhenBlank="true" uuid="53be6e98-2660-4545-8464-38e7a885dd40"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="239">
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="136" y="0" width="60" height="20" uuid="b26f3519-a0ed-40d9-a657-d77ac9b89f0f"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Long($V{c_count_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="196" y="0" width="91" height="20" uuid="3cdfea7a-de11-4727-a01b-fbb1179bb92a"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="287" y="0" width="88" height="20" uuid="7fbd64ba-a01a-402c-ab75-819344822a83"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{settle_amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="445" y="0" width="70" height="20" uuid="61533357-3944-4a57-bb38-6dfd208ead67"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{un_paid_amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="375" y="0" width="70" height="20" uuid="439fee14-05e8-4881-8486-e8b98fa16615"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{pay_amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="515" y="0" width="70" height="20" uuid="2b2518a1-2c07-4dfa-95b8-36f8c5061abf"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{un_paid_amount_1}/$V{settle_amount_1}*100)]]></textFieldExpression>
+			</textField>
+			<pieChart>
+				<chart>
+					<reportElement x="136" y="51" width="239" height="175" uuid="fb4b2108-d83c-4d93-b4fc-a6641a2efaf8">
+						<printWhenExpression><![CDATA[$V{REPORT_COUNT} > 0]]></printWhenExpression>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="ChartDataSet" uuid="12589a66-c0ea-4400-b4d3-ec8d264d100e">
+							<datasetParameter name="chartProjectId">
+								<datasetParameterExpression><![CDATA[$P{projectId}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{pay_type}]]></keyExpression>
+					<valueExpression><![CDATA[$F{paid_percent}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{0}{2}" legendLabelFormat="{0}">
+					<plot/>
+					<itemLabel>
+						<font fontName="仿宋" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="136" height="20" uuid="29c46179-6ea2-4aa9-b017-e158bc9f5991"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="仿宋" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TOTALS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="monthRepairReport" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isFloatColumnFooter="true" resourceBundle="/report/report" uuid="8401b3b3-156a-4a11-9417-bbf7a36c222a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="repairType" class="java.lang.String"/>
+	<parameter name="years" class="java.lang.String"/>
+	<parameter name="queryParams" class="java.lang.String">
+		<defaultValueExpression><![CDATA[com.photo.pgm.core.utils.ReportSQLUtils.getRepairAnalysisConditions($P{repairType},$P{years})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+repair_report.name,
+repair_report.year,
+repair_report.jd,
+count(1) as repair_count,
+sum(repair_report.settle_account) as amount
+from (
+   select
+	ps.name,
+	to_char(ro.modification_date, 'yyyy') as year,
+	case when to_char(ro.modification_date, 'MM') = '01' or to_char(ro.modification_date, 'MM') = '02' or to_char(ro.modification_date, 'MM') = '03' then 1
+	     when to_char(ro.modification_date, 'MM') = '04' or to_char(ro.modification_date, 'MM') = '05' or to_char(ro.modification_date, 'MM') = '06' then 2
+	     when to_char(ro.modification_date, 'MM') = '07' or to_char(ro.modification_date, 'MM') = '08' or to_char(ro.modification_date, 'MM') = '09' then 3
+	     when to_char(ro.modification_date, 'MM') = '10' or to_char(ro.modification_date, 'MM') = '11' or to_char(ro.modification_date, 'MM') = '12' then 4
+	end as jd,
+	ro.settle_account,
+	ro.repair_type
+   from project.repair_order ro
+   left join project.petrol_station ps on ro.petrol_station = ps.id
+   where ro.active='T' and ro.repair_status='Closed'
+) repair_report
+$P!{queryParams}
+group by repair_report.year,repair_report.jd,repair_report.name order by repair_report.year,repair_report.jd,repair_report.name]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="year" class="java.lang.String"/>
+	<field name="repair_count" class="java.lang.Long"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="jd" class="java.lang.Integer"/>
+	<variable name="repair_count_1" class="java.lang.Long" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{repair_count}]]></variableExpression>
+	</variable>
+	<variable name="amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="62" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="501" height="62" uuid="5db6cad4-7289-44db-b8b5-a78d9efebee3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.MonthRepairReport}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="400" y="0" width="101" height="20" uuid="63e517d7-b8a8-4975-82ad-b4ca0bcd7b52">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TotalRepairAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="175" y="0" width="134" height="20" uuid="1e8b5e9a-0c98-4b2e-884b-b8a8cc023497">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.OilName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20" uuid="b716f36b-00d6-45af-bbdf-93f00a00ee3c">
+					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.NF}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="309" y="0" width="91" height="20" uuid="5f01de15-e7ac-4d17-9c3f-c55a457befb7">
+					<property name="net.sf.jasperreports.export.xls.column.width.ratio" value="1.2"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TotalRepairCount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="75" height="20" uuid="c150942e-3ad9-4ed0-9482-581d8c1eb829">
+					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.JD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="100" height="20" uuid="fcf30c19-5c54-411c-83b9-b7fa92f1cbcb"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="175" y="0" width="134" height="20" uuid="4eb7c058-4d0f-4d22-bec2-d297af3f1cf9"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="309" y="0" width="91" height="20" uuid="894bbae4-8d72-4caf-aee4-85690e0868ac"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{repair_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="101" height="20" uuid="d238e9db-1830-4ab4-bc0e-5a926c3c778e"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="75" height="20" uuid="547a363d-dc15-4830-b663-1311a2fe4569"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{jd}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20">
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="309" height="20" uuid="cd972a65-4cec-4bff-aedb-93ab26b4f73c"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TOTALS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="309" y="0" width="91" height="20" uuid="702a8f3f-d4d1-4d84-b321-fa0eec8fc2bb"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{repair_count_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="100" height="20" uuid="d5ed213c-9a0d-4706-9861-fc7bb22bd94a"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{amount_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

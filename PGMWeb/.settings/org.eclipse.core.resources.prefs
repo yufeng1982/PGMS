@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/webapp/WEB-INF/views/hr/employee/employee.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/layouts/_header2.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/project/project/project.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/project/task/_includes/_tasksGrid.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/project/task/toDoTasks.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/project/yearBudgets/_includes/_yearBudgetGeneral.jsp=UTF-8
+encoding//src/test/java=UTF-8
+encoding//src/test/resources=UTF-8
+encoding/<project>=UTF-8

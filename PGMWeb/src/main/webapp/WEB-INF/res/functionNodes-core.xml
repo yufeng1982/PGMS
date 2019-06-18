@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+    
+    <module id = "TK" key="FNT.TASK" iconCls="ss_script">
+    	<node id="TK01" name="todoTask" key="FN.TodoTask" imgSrc="" index="10000" url="/app/pgm/project/todotask/list" pattern="" leaf="true"></node>
+    	<node id="TK02" name="finishTask" key="FN.FinishTask" imgSrc="" index="10001" url="/app/pgm/project/todotask/list/showHistory" pattern="" leaf="true"></node>
+    	<node id="TK03" name="repairTodoTask" key="FN.TodoRepairTask" imgSrc="" index="10002" url="/app/pgm/project/todotask/list/repair" pattern="" leaf="true"></node>
+    	<node id="TK04" name="repairFinishTask" key="FN.FinishRepairTask" imgSrc="" index="10003" url="/app/pgm/project/todotask/list/showRepairHistory" pattern="" leaf="true"></node>
+    	<!-- 
+    	<node id="TK05" name="repairSettleAccountTodoTask" key="FN.TodoRSATask" imgSrc="" index="10002" url="/app/pgm/project/todotask/list/repairSettleAccount" pattern="" leaf="true"></node>
+    	<node id="TK06" name="repairSettleAccountFinishTask" key="FN.FinishRSATask" imgSrc="" index="10003" url="/app/pgm/project/todotask/list/showRepairSettleAccountHistory" pattern="" leaf="true"></node>
+    	 -->
+   	</module>
+   	
+    <module id = "KF" key="FNT.DEVM" iconCls="ss_package">
+    	<node id="KF01" name="project" key="FN.PetrolStations" imgSrc="" index="10000" url="/app/pgm/project/project/list" pattern="" leaf="true"></node>
+    	<node id="KF02" name="projectApproveBudget" key="FN.ProjectApproveBudget" imgSrc="" index="10000" url="/app/pgm/project/projectApproveBudget/list" pattern="" leaf="true"></node>
+    </module>
+    
+    <module id = "GC" key="FNT.GCMS" iconCls="ss_building_edit">
+    	<node id="GC0" name="petrolStation" key="FN.PetrolStations" imgSrc="" index="1000" url="/app/pgm/project/petrolStation/list" pattern="" leaf="true"></node>
+    	<node id="GC01" name="yearBudgets" key="FN.YearBudgets" imgSrc="" index="1001" url="/app/pgm/project/yearBudgets/list" pattern="" leaf="true"></node>
+    	<folder id="GC1" key="FN.HTMS" imgSrc="" index="10000" url="" leaf="false">
+    		<node id="GC10" name="contract" key="FN.Contract" imgSrc="" index="10001" url="/app/pgm/project/contract/list" pattern="" leaf="true"></node>
+    		<node id="GC11" name="contractCategory" key="FN.ContractCategroy" imgSrc="" index="10002" url="/app/pgm/project/contractCategory/list" pattern="" leaf="true"></node>
+    		<node id="GC12" name="settleAccounts" key="FN.ContractSettlement" imgSrc="" index="10003" url="/app/pgm/project/settleAccounts/list" pattern="" leaf="true"></node>
+    	</folder>
+    	<folder id="GC2" key="FN.WXMS" imgSrc="" index="20000" url="" leaf="false">
+    		<node id="GC20" name="repairOrder" key="FN.RepairOrder" imgSrc="" index="20001" url="/app/pgm/project/repairOrder/list" pattern="" leaf="true"></node>
+    		<!-- <node id="GC21" name="repairSettleAccount" key="FN.RepairSettleAccount" imgSrc="" index="20002" url="/app/pgm/project/repairSettleAccount/list" pattern="" leaf="true"></node> -->
+    	</folder>
+    	<folder id="GC3" key="FN.FKMS" imgSrc="" index="30000" url="" leaf="false">
+    		<node id="GC30" name="payItem" key="FN.PayItem" imgSrc="" index="30001" url="/app/pgm/project/payItem/list" pattern="" leaf="true"></node>
+    		<node id="GC31" name="payAccount" key="FN.PayAccount" imgSrc="" index="30002" url="/app/pgm/project/payAccount/list" pattern="" leaf="true"></node>
+    	</folder>
+    	<folder id="GC4" key="FN.LCSZ" imgSrc="" index="40000" url="" leaf="false">
+    		<node id="GC40" name="flowDefinition" key="FN.FlowDefinition" imgSrc="" index="41000" url="/app/pgm/project/flowDefinition/list" pattern="" leaf="true"></node>
+    		<node id="GC41" name="repairApproveSetup" key="FN.SmallRepair" imgSrc="" index="42000" url="/app/pgm/project/repairApproveSetup/list/smalls" pattern="" leaf="true"></node>
+    		<node id="GC42" name="repairApproveSetup" key="FN.GneralRepair" imgSrc="" index="43000" url="/app/pgm/project/repairApproveSetup/list/generals" pattern="" leaf="true"></node>
+    		<!--<node id="GC43" name="repairApproveSetup" key="FN.RepairSettleAccounts" imgSrc="" index="44000" url="/app/pgm/project/repairApproveSetup/list/settles" pattern="" leaf="true"></node>  -->
+    	</folder>
+    	<folder id="GC6" key="FN.TBFX" imgSrc="" index="50002" url="" leaf="false">
+    		<node id="GC60" name="projectReport" key="FN.ProjectReport" imgSrc="" index="500021" url="/app/pgm/report/projectReport" pattern="" leaf="true"></node>
+    		<node id="GC61" name="projectAnalysis" key="FN.ProjectAnalysis" imgSrc="" index="500022" url="/app/pgm/report/projectAnalysis" pattern="" leaf="true"></node>
+    		<node id="GC62" name="repairAnalysis" key="FN.RepairAnalysis" imgSrc="" index="500023" url="/app/pgm/report/repairAnalysis" pattern="" leaf="true"></node>
+    	</folder>
+    </module> 
+    
+    <module id = "XZ" key="FNT.XZMS" iconCls="ss_award_star_bronze_2">
+    	<folder id="XZ1" key="FN.ZZJG" imgSrc="" index="10000" url="" leaf="false">
+    		<node id="XZ10" name="department" key="FN.Department" imgSrc="" index="11000" url="/app/pgm/hr/department/list" pattern="" leaf="true"></node>
+   			<node id="XZ11" name="position" key="FN.Position" imgSrc="" index="12000" url="/app/pgm/hr/position/list" pattern="" leaf="true"></node>
+    		<node id="XZ12" name="ourSideCorporation" key="FN.OurSideCorporation" imgSrc="" index="13000" url="/app/pgm/project/ourSideCorporation/list" pattern="" leaf="true"></node>
+    	</folder>
+   	</module>
+   	
+   	<module id = "ZC" key="FNT.ZCMS" iconCls="ss_coins">
+    	<node id="ZC1" name="asset" key="FN.PetrolAsset" imgSrc="" index="10001" url="/app/pgm/project/asset/list" pattern="" leaf="true"></node>
+    	<node id="ZC2" name="assetsCategory" key="FN.AssetsCategroy" imgSrc="" index="10002" url="/app/pgm/project/assetsCategory/list" pattern="" leaf="true"></node>
+   	</module>
+   	<module id = "CW" key="FNT.CWMS" iconCls="ss_money_yen">
+    	<node id="CW1" name="costCenter" key="FN.CostCenter" imgSrc="" index="10001" url="/app/pgm/project/costCenter/list" pattern="" leaf="true"></node>
+   	</module>
+   	
+   	<module id = "VD" key="FNT.VENDOR" iconCls="ss_status_online">
+    	<node id="VD1" name="cooperation" key="FN.Cooperation" imgSrc="" index="10001" url="/app/pgm/project/cooperation/list" pattern="" leaf="true"></node>
+    	<node id="VD2" name="cooperationType" key="FN.CooperationType" imgSrc="" index="10002" url="/app/pgm/project/cooperationType/list" pattern="" leaf="true"></node>
+   	</module>
+   	
+   	<module id = "HR" key="FNT.HR" iconCls="ss_group">
+   		<node id="HR01" name="employee" key="FN.Employee" imgSrc="" index="10000" url="/app/pgm/hr/employee/list" pattern="" leaf="true"></node>
+   	</module>
+   	
+    <module id="SEC" key="FNT.Administration" iconCls="ss_shield">
+        <node id="SEC01" name="user" key="FN.User" imgSrc="" index="10400" url="/app/core/user/list" pattern="/app/core/user/" leaf="true"></node>
+        <node id="SEC02" name="role" key="FN.Role" imgSrc="" index="10500" url="/app/core/role/list" pattern="/app/core/role/" leaf="true"></node>
+        <node id="SEC03" name="organization" key="FN.Organization" imgSrc="" index="10600" url="/app/pgm/organization/list" pattern="/app/core/organization/" leaf="true"></node>
+    </module>
+    
+</modules>

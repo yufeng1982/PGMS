@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepairOrder" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" resourceBundle="/report/report" uuid="c72ab063-4e12-4511-8d32-e2205931d046">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="repairOrder" class="java.lang.String"/>
+	<parameter name="webDir" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\02_Report\\report\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ro.code,
+ps.name as petrol_station,
+asset.name as asset_name,
+asset.brand,
+asset.specification,
+coo.name as vendor_name,
+u.real_name as apply_name,
+to_char(ro.creation_date,'yyyy-MM-dd') as apply_date,
+ro.contact,
+ro.breakdown_reason,
+ro.budget,
+ro.repair_type,
+ro.repair_status,
+ro.comment,
+ro.image_path1,
+ro.image_path2,
+ro.image_path3,
+ro.opinions1,
+ro.current_budget,
+ro.repair_time,
+yb.name as approve_content,
+ro.repair_solutions,
+ro.lgyxk,
+ro.rgyxk,
+ro.dqxk,
+ro.dgxk,
+ro.sxxk,
+ro.opinions2,
+ro.opinions21,
+ro.opinions41,
+ro.opinions4,
+ro.opinions5,
+ro.opinions6,
+ro.opinions7,
+ro.opinions8,
+zdu.real_name as zd_name,
+ro.opinions9,
+ro.opinions10,
+ro.opinions11,
+ro.actual_amount,
+ro.repaired_image_path1,
+ro.repaired_image_path2,
+ro.repaired_image_path3,
+ro.adjust,
+ro.adjust_type,
+ro.settle_account,
+ro.change_amount,
+ro.this_budget_upper,
+ro.opinions12,
+ro.opinions13,
+ro.opinions14,
+ro.opinions15
+
+from project.repair_order ro
+left join project.petrol_station ps on ro.petrol_station = ps.id
+left join project.asset asset on ro.asset = asset.id
+left join project.cooperation coo on asset.vendor = coo.id
+left join public.users u on ro.created_by = u.id
+left join project.year_budgets yb on ro.year_budgets = yb.id
+left join public.users zdu on ro.zd_user = zdu.id
+where ro.id=$P{repairOrder}]]>
+	</queryString>
+	<field name="code" class="java.lang.String"/>
+	<field name="petrol_station" class="java.lang.String"/>
+	<field name="asset_name" class="java.lang.String"/>
+	<field name="brand" class="java.lang.String"/>
+	<field name="specification" class="java.lang.String"/>
+	<field name="vendor_name" class="java.lang.String"/>
+	<field name="apply_name" class="java.lang.String"/>
+	<field name="apply_date" class="java.lang.String"/>
+	<field name="contact" class="java.lang.String"/>
+	<field name="breakdown_reason" class="java.lang.String"/>
+	<field name="budget" class="java.lang.Double"/>
+	<field name="repair_type" class="java.lang.String"/>
+	<field name="repair_status" class="java.lang.String"/>
+	<field name="comment" class="java.lang.String"/>
+	<field name="image_path1" class="java.lang.String"/>
+	<field name="image_path2" class="java.lang.String"/>
+	<field name="image_path3" class="java.lang.String"/>
+	<field name="opinions1" class="java.lang.String"/>
+	<field name="current_budget" class="java.lang.Double"/>
+	<field name="repair_time" class="java.lang.Double"/>
+	<field name="approve_content" class="java.lang.String"/>
+	<field name="repair_solutions" class="java.lang.String"/>
+	<field name="lgyxk" class="java.lang.String"/>
+	<field name="rgyxk" class="java.lang.String"/>
+	<field name="dqxk" class="java.lang.String"/>
+	<field name="dgxk" class="java.lang.String"/>
+	<field name="sxxk" class="java.lang.String"/>
+	<field name="opinions2" class="java.lang.String"/>
+	<field name="opinions21" class="java.lang.String"/>
+	<field name="opinions41" class="java.lang.String"/>
+	<field name="opinions4" class="java.lang.String"/>
+	<field name="opinions5" class="java.lang.String"/>
+	<field name="opinions6" class="java.lang.String"/>
+	<field name="opinions7" class="java.lang.String"/>
+	<field name="opinions8" class="java.lang.String"/>
+	<field name="zd_name" class="java.lang.String"/>
+	<field name="opinions9" class="java.lang.String"/>
+	<field name="opinions10" class="java.lang.String"/>
+	<field name="opinions11" class="java.lang.String"/>
+	<field name="actual_amount" class="java.lang.Double"/>
+	<field name="repaired_image_path1" class="java.lang.String"/>
+	<field name="repaired_image_path2" class="java.lang.String"/>
+	<field name="repaired_image_path3" class="java.lang.String"/>
+	<field name="adjust" class="java.lang.Boolean"/>
+	<field name="adjust_type" class="java.lang.String"/>
+	<field name="settle_account" class="java.lang.Double"/>
+	<field name="change_amount" class="java.lang.Double"/>
+	<field name="this_budget_upper" class="java.lang.String"/>
+	<field name="opinions12" class="java.lang.String"/>
+	<field name="opinions13" class="java.lang.String"/>
+	<field name="opinions14" class="java.lang.String"/>
+	<field name="opinions15" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="20">
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="65" y="0" width="520" height="20" forecolor="#000000" backcolor="#00CCCC" uuid="3052fd6b-7d0d-41a7-bce1-5e276ed63521"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="0" width="65" height="20" backcolor="#00CCCC" uuid="c03a0209-3eb7-4170-a6d9-6004374ec70f"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.RepairCode}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="215" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="0" width="81" height="20" uuid="0216e507-eb61-469c-b92d-670f8a176704"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{petrol_station}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="0" width="81" height="20" uuid="20adb7a9-6601-400e-b76d-58912511aa2b"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apply_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="498" y="0" width="87" height="20" uuid="1b5b6327-7f36-48f2-9fa0-5fed2cf1b20d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contact}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="0" width="81" height="20" uuid="a3630f9c-38ab-400f-8b75-7caba27f1484"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apply_date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="498" y="20" width="87" height="20" uuid="bc140c09-82df-42d8-9ce8-ea977e15fd7d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vendor_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="20" width="81" height="20" uuid="643a1d9e-bd7d-4faa-b78a-29085c878ffe"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{brand}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="20" width="81" height="20" uuid="f2ea2ce9-098a-40b0-9eb6-a16eab4f63a5"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asset_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="20" width="81" height="20" uuid="8757614b-bbb0-4a4e-8922-00a16284be41"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{specification}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="40" width="81" height="20" uuid="5b084fa9-515c-4d74-808d-8332a696b09b"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.photo.pgm.core.utils.ReportUtils.getRepairType($F{repair_type})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="40" width="81" height="20" uuid="37cd41e4-b214-4735-aa69-7834889903de"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{budget}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="40" width="81" height="20" uuid="0db92915-fc81-4095-8b08-1a7e25c70eb9"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.photo.pgm.core.utils.ReportUtils.getBreakdown($F{breakdown_reason})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="498" y="40" width="87" height="20" uuid="b8cbcb87-2fa0-4475-b804-c90f4dcda174"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.photo.pgm.core.utils.ReportUtils.getRepairStatus($F{repair_status})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="60" width="520" height="20" uuid="ab61656d-6318-4956-9e4d-aafe851be158"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{opinions1}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="80" width="146" height="135" uuid="826f39aa-8d97-4bf8-a930-1ae528af52b9">
+					<printWhenExpression><![CDATA[$F{image_path1}!=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{webDir}+$F{image_path1}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="211" y="80" width="146" height="135" uuid="13bfcefe-4346-44e3-a841-166449b712b4">
+					<printWhenExpression><![CDATA[$F{image_path2}!=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{webDir}+$F{image_path2}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="438" y="80" width="146" height="135" uuid="920e4cea-bf60-4ce4-8947-7435a85b5eb2">
+					<printWhenExpression><![CDATA[$F{image_path3}!=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{webDir}+$F{image_path3}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="146" y="80" width="65" height="135" uuid="17541cd4-6557-42e6-a258-eae0e8ec4741"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="80" width="81" height="135" uuid="770da06a-04e9-4a75-ba77-8e4516914856"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="65" height="20" uuid="7a6fc859-5afa-4afd-b37b-71123ab74176"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.YZ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="20" width="65" height="20" uuid="e8c989fd-7313-4315-b586-02376fae6eb6"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXXM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="40" width="65" height="20" uuid="b4444b03-7cb4-4ab8-89bb-8ef2056f6201"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.GZYY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="60" width="65" height="20" uuid="b3e9d6e7-3019-4370-b526-49c20c490b5b"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.GZMS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="146" y="0" width="65" height="20" uuid="07b1b2b6-20ce-4903-99e8-5c97534932ea"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SQR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="146" y="20" width="65" height="20" uuid="04dbd0b6-1548-4c59-ae55-627e1c80f2bc"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SBPP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="146" y="40" width="65" height="20" uuid="8afebec8-44e2-4052-9e1c-68f404fcfa35"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXYS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="0" width="65" height="20" uuid="4d09cf55-9f54-4b2a-9b4b-5d42b1560757"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SQSJ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="0" width="60" height="20" uuid="bd6398e8-11a0-4d88-8fbb-3ac86525423f"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.LXFS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="20" width="65" height="20" uuid="65fda79d-d44e-4e94-9995-f78081ab058c"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SBGG}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="20" width="60" height="20" uuid="1b33533f-3887-40eb-83d3-ec1b9f944cd7"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SBGYS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="40" width="65" height="20" uuid="c2f215df-fc47-476d-827f-429a9f66c680"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXLX}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="438" y="40" width="60" height="20" uuid="2d1304a0-6848-48e6-8fcb-8efe677c43fa"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ZT}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="85">
+			<printWhenExpression><![CDATA[!$F{repair_type}.equals( "Small" )]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="212" y="25" width="81" height="20" uuid="08112d8d-4b8b-4307-9d8c-d393a6cea08a"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{repair_time}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="25" width="82" height="20" uuid="607e5ed3-88ed-43f6-886a-1ecaa77ac92d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{current_budget}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="358" y="25" width="228" height="20" uuid="73509aa2-02cf-4373-9f02-5e80a817492d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{approve_content}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="45" width="521" height="20" uuid="23d30a47-2a81-4780-afc5-7189703a5e07"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{repair_solutions}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="65" width="44" height="20" uuid="c318f074-fba6-4766-b002-f62e15357a0d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lgyxk}.equals( "T" ) ? $R{RT.Yes} : $R{RT.No}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="174" y="65" width="43" height="20" uuid="243d2558-0091-4a94-969e-5d362f571d4c"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rgyxk}.equals( "T" ) ? $R{RT.Yes} : $R{RT.No}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="282" y="65" width="43" height="20" uuid="9f0cf488-39c8-4d44-bd78-259e4ec1664e"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dqxk}.equals( "T" ) ? $R{RT.Yes} : $R{RT.No}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="390" y="65" width="49" height="20" uuid="264a6ef6-df0b-4ee6-afec-7f8da7ef6d56"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dgxk}.equals( "T" ) ? $R{RT.Yes} : $R{RT.No}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="532" y="65" width="54" height="20" uuid="81b183a8-5eb5-4257-bb1d-65524bf8a359"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sxxk}.equals( "T" ) ? $R{RT.Yes} : $R{RT.No}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="5" width="585" height="20" backcolor="#00CCCC" uuid="90d38af4-b5dd-49e4-9fb4-7c44b17f39b1"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXGCSSH}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="25" width="65" height="20" uuid="df92c60a-c2ad-4386-a999-e9a2e0dcc87a"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.BCWXYS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="147" y="25" width="65" height="20" uuid="b03d8e97-27a8-4923-a9c8-1823118e4440"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXHS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="293" y="25" width="65" height="20" uuid="d8c46b48-2ccd-4361-b703-19765dbf95e4"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.YSPFSX}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="45" width="65" height="20" uuid="8e9cded4-2fc7-4ac0-ba9b-16c14de528b9"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXFA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="65" width="65" height="20" uuid="eb04ba12-6d86-43df-bbdd-565159dff05b"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.LGZY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="109" y="65" width="65" height="20" uuid="6e75de89-c67b-48f0-bed0-f12ecdb9b44f"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.RGZY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="217" y="65" width="65" height="20" uuid="7f64967c-c559-4a6d-945b-f9b3bbe1db8f"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.DQZY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="325" y="65" width="65" height="20" uuid="3f6b4b5c-f7cf-4694-96f4-88863c908247"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.DGZY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="439" y="65" width="93" height="20" uuid="2fd4f378-b265-46b4-aae7-0da1d4339e03"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SXZY}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="179">
+			<printWhenExpression><![CDATA[!$F{repair_type}.equals( "Small" )]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="24" width="520" height="20" uuid="c3f22a63-5c04-46ee-a76e-1e95700d7559"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{opinions11}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="44" width="146" height="135" uuid="f8363f6a-3fe3-4df0-addd-25b541b607b0">
+					<printWhenExpression><![CDATA[$F{repaired_image_path1} !=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{webDir}+$F{repaired_image_path1}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="146" y="44" width="65" height="135" uuid="2064d425-0518-4b02-820c-a9041716116b"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="211" y="44" width="146" height="135" uuid="c84c523e-b2d7-4db1-aee0-e4c47fe868dc">
+					<printWhenExpression><![CDATA[$F{repaired_image_path2} !=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{webDir}+$F{repaired_image_path2}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="44" width="81" height="135" uuid="88bbdacd-60a2-49d3-a399-b509aa55a5ed"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="438" y="44" width="146" height="135" uuid="ceef88f2-45ae-43cc-a29a-6a427d95fc9a">
+					<printWhenExpression><![CDATA[$F{repaired_image_path3} !=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{webDir}+$F{repaired_image_path3}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="4" width="585" height="20" backcolor="#00CCCC" uuid="51c69b0c-a5a0-4a93-874d-f8751731e3dc"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.YZJLQR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="24" width="65" height="20" uuid="c0578546-7bfe-4767-b5c5-a375d2e76070"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.YJ}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="105">
+			<printWhenExpression><![CDATA[!$F{repair_type}.equals( "Small" )]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="77" y="85" width="508" height="20" uuid="beec5126-a48b-4388-8f46-01d291f7c367"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{opinions12}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="108" y="25" width="477" height="20" uuid="2609fffb-9534-4e0f-b33b-e42995690f68"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{adjust}.equals( "T" ) ? $R{RT.Yes} : $R{RT.No}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="77" y="45" width="81" height="20" uuid="ffbac4a0-b4c6-468a-8f2f-cc634f724678"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.photo.pgm.core.utils.ReportUtils.getAdjusttype($F{adjust_type})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="45" width="362" height="20" uuid="949d4071-a4ed-4e90-b76a-410773329fd8"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{change_amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="77" y="65" width="81" height="20" uuid="55323f04-775f-455e-91f2-3e0db9be9d66"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{settle_account}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="65" width="362" height="20" uuid="c73120d0-6da3-4a05-b6d8-b6a3348e6207"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{this_budget_upper}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="5" width="585" height="20" backcolor="#00CCCC" uuid="156d94b2-c174-4240-9bb8-efd364cfd00e"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXGCSQR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="25" width="108" height="20" uuid="6dbec207-04e5-4fd4-9799-74ba8772e3a2"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.WXJETZ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="45" width="77" height="20" uuid="18f4c4ef-e5c4-4205-9b33-7d0bb618de14"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.JETZLX}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="65" width="77" height="20" uuid="85f13e1c-211c-466b-bebe-3ca1d982bd1d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.BCJSZJE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="158" y="45" width="65" height="20" uuid="9f041851-ec45-4ad7-a4f9-49003dbe27cd"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.JEBG}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="158" y="65" width="65" height="20" uuid="049256fa-c8e4-49fe-bca7-3ea6679e7cff"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.DX}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="85" width="77" height="20" uuid="32af7cc1-c4f5-4da9-8dd1-d8fe3ea72918"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.XXSM}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="200">
+			<printWhenExpression><![CDATA[$F{repair_type}.equals( "Small" )]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="45" width="520" height="20" uuid="5ac4fd3a-cdd9-4e3d-b7c0-1e91846e5823"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{opinions11}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="25" width="520" height="20" uuid="6303e2bf-5c3c-4636-97dd-1ac0cdbcdeef"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual_amount}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="65" width="146" height="135" uuid="258d32e5-610d-4644-bf7c-601af4a142e7"/>
+				<imageExpression><![CDATA[$P{webDir}+$F{repaired_image_path1}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="146" y="65" width="65" height="135" uuid="d78aba95-20ee-4807-9cbb-373a1dd7a1e7"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="65" width="81" height="135" uuid="8de4554e-25d6-44d4-a0db-446c2cc31bec"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="438" y="65" width="146" height="135" uuid="58a03d55-30e8-4f05-baa3-6e305e661b0e"/>
+				<imageExpression><![CDATA[$P{webDir}+$F{repaired_image_path3}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="211" y="65" width="146" height="135" uuid="1fddeccd-c090-490f-9768-0af952682ce9"/>
+				<imageExpression><![CDATA[$P{webDir}+$F{repaired_image_path2}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="5" width="585" height="20" backcolor="#00CCCC" uuid="0611624c-a6e6-45d7-bcd7-35cde0feca55"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.YZJLQR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="25" width="65" height="20" uuid="fbc788cb-7bb0-40ae-9380-e3e84a6f0118"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SJJE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="45" width="65" height="20" uuid="a8f15994-ef59-459e-8db5-f9caf3dde600"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.YJ}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="1">
+			<break>
+				<reportElement x="0" y="0" width="100" height="1" uuid="6c10e456-eb3f-4712-9432-798b5524161f"/>
+			</break>
+		</band>
+		<band height="78">
+			<subreport>
+				<reportElement x="1" y="40" width="584" height="38" uuid="22668637-264a-46c6-8535-a3f1a7285b54"/>
+				<subreportParameter name="repairOrderId">
+					<subreportParameterExpression><![CDATA[$P{repairOrder}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "RepairOrder_subreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="0" width="585" height="20" backcolor="#CCCCCC" uuid="9b440d3b-33be-4a39-ab3d-cce5308cfd78"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.LSSP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="20" width="133" height="20" backcolor="#CCCCCC" uuid="5bccce7b-33b3-4ec3-803b-125903b49378"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TASKNAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="133" y="20" width="58" height="20" backcolor="#CCCCCC" uuid="4877fbbf-399b-4cfb-b13f-44e6d1fde0b9"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TASKSTATUS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="191" y="20" width="108" height="20" backcolor="#CCCCCC" uuid="a9b52994-b0d0-4ec7-bb07-9f6f83cf854d"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TASKCLSJ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="299" y="20" width="58" height="20" backcolor="#CCCCCC" uuid="ac03fede-3aa5-4b83-948d-4cc6932343c6"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TASKXYR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="357" y="20" width="228" height="20" backcolor="#CCCCCC" uuid="501c3c6a-651d-461b-b68a-e7ad474cde15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TASKSPYJ}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

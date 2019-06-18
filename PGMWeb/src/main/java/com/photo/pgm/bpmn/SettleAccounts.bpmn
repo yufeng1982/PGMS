@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="SettleAccounts" name="维修结算审批" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <userTask id="A000001" name="维修工程师审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairSettleAccountListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairSettleAccountStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="A000001"></sequenceFlow>
+    <serviceTask id="hseAmount" name="HSE奖惩金额" activiti:expression="${repairSettleAccountService.judgeHSEAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <userTask id="A000002" name="HSE审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairSettleAccountListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairSettleAccountStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="repairAmount2000" name="判断本次维修金额" activiti:expression="${repairSettleAccountService.judgeAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow2" sourceRef="A000001" targetRef="hseAmount"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="hseAmount" targetRef="repairAmount2000">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue <= 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="hseAmount" targetRef="A000002">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="A000002" targetRef="repairAmount2000"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="repairAmount2000" targetRef="FinishSettleAccount">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue <= 2000}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="A000003" name="部门经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairSettleAccountListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairSettleAccountStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="repairAmount10000" name="判断本次维修金额" activiti:expression="${repairSettleAccountService.judgeAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <userTask id="A000004" name="分管副总审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairSettleAccountListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairSettleAccountStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow7" sourceRef="repairAmount2000" targetRef="A000003">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue > 2000}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="repairAmount10000" targetRef="A000004">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue > 10000}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow10" sourceRef="repairAmount10000" targetRef="FinishSettleAccount">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue <= 10000}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="repairAmount50000" name="判断本次维修金额" activiti:expression="${repairSettleAccountService.judgeAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <userTask id="A000005" name="总经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairSettleAccountListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairSettleAccountStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow11" sourceRef="A000004" targetRef="repairAmount50000"></sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="repairAmount50000" targetRef="A000005">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue > 50000}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow13" sourceRef="repairAmount50000" targetRef="FinishSettleAccount">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue <= 50000}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="A000005" targetRef="FinishSettleAccount"></sequenceFlow>
+    <sequenceFlow id="flow15" sourceRef="A000003" targetRef="repairAmount10000"></sequenceFlow>
+    <serviceTask id="FinishSettleAccount" name="结算完成" activiti:expression="${repairSettleAccountService.setFlowFinished(entityId)}"></serviceTask>
+    <sequenceFlow id="flow16" sourceRef="FinishSettleAccount" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_SettleAccounts">
+    <bpmndi:BPMNPlane bpmnElement="SettleAccounts" id="BPMNPlane_SettleAccounts">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="60.0" y="70.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="A000001" id="BPMNShape_A000001">
+        <omgdc:Bounds height="55.0" width="105.0" x="140.0" y="60.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="hseAmount" id="BPMNShape_hseAmount">
+        <omgdc:Bounds height="55.0" width="105.0" x="330.0" y="60.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="A000002" id="BPMNShape_A000002">
+        <omgdc:Bounds height="55.0" width="105.0" x="330.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="repairAmount2000" id="BPMNShape_repairAmount2000">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="880.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="A000003" id="BPMNShape_A000003">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="repairAmount10000" id="BPMNShape_repairAmount10000">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="377.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="A000004" id="BPMNShape_A000004">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="470.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="repairAmount50000" id="BPMNShape_repairAmount50000">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="567.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="A000005" id="BPMNShape_A000005">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="660.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="FinishSettleAccount" id="BPMNShape_FinishSettleAccount">
+        <omgdc:Bounds height="55.0" width="105.0" x="720.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="95.0" y="87.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="87.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="245.0" y="87.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="87.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="435.0" y="87.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="87.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="190.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="382.0" y="115.0"></omgdi:waypoint>
+        <omgdi:waypoint x="382.0" y="190.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="435.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="655.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="720.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="602.0" y="245.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="280.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="602.0" y="432.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="470.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="655.0" y="404.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="404.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="245.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="602.0" y="525.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="567.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="602.0" y="622.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="660.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="655.0" y="594.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="594.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="245.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="655.0" y="687.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="687.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="245.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
+        <omgdi:waypoint x="602.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="377.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow16" id="BPMNEdge_flow16">
+        <omgdi:waypoint x="825.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="880.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

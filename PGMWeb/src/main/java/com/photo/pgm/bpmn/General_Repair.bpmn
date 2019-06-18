@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="GeneralRepair" name="普通或加急维修审批" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <userTask id="G000001" name="维修工程师响应">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow2" sourceRef="startevent1" targetRef="G000001"></sequenceFlow>
+    <userTask id="G000002" name="维修工程师审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow3" sourceRef="G000001" targetRef="G000002"></sequenceFlow>
+    <userTask id="G000003" name="区域经理/维修技师审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow4" sourceRef="G000002" targetRef="G000003"></sequenceFlow>
+    <userTask id="G000004" name="部门经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="judgeSettleAmount2000" name="判断预算金额" activiti:expression="${repairOrderService.judgeAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <userTask id="G000008" name="财务审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow7" sourceRef="judgeSettleAmount2000" targetRef="G000008">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="judgeConsumTime" name="判断维修耗时" activiti:expression="${repairOrderService.judgeConsumTime(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <userTask id="G000005" name="HSE审核" default="flow14">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow11" sourceRef="judgeConsumTime" targetRef="G000005">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue > 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="G000005" targetRef="G000002">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000002'}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="judgeSettleAmount50000" name="判断预算金额" activiti:expression="${repairOrderService.judgeAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <sequenceFlow id="flow13" sourceRef="judgeConsumTime" targetRef="judgeSettleAmount2000">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue <= 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="G000005" targetRef="judgeSettleAmount2000">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='judgeSettleAmount10000'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="G000006" name="分管副总审核" default="flow18">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="judgeSettleAmount10000" name="判断预算金额" activiti:expression="${repairOrderService.judgeAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <sequenceFlow id="flow15" sourceRef="judgeSettleAmount10000" targetRef="G000008">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow17" sourceRef="G000006" targetRef="G000002">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000002'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow18" sourceRef="G000006" targetRef="judgeSettleAmount50000">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='judgeSettleAmount50000'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="G000007" name="总经理审批" default="flow28">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow19" sourceRef="judgeSettleAmount50000" targetRef="G000007">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow20" sourceRef="judgeSettleAmount50000" targetRef="G000008">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow21" sourceRef="G000007" targetRef="G000002">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000002'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="G000009" name="维修工程师派单">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow22" sourceRef="G000008" targetRef="G000009"></sequenceFlow>
+    <userTask id="G000010" name="工程师/技师响应">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow23" sourceRef="G000009" targetRef="G000010"></sequenceFlow>
+    <userTask id="G000011" name="油站经理确认">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow24" sourceRef="G000010" targetRef="G000011"></sequenceFlow>
+    <endEvent id="endevent2" name="End">
+      <extensionElements>
+        <activiti:executionListener event="end" class="com.photo.pgm.core.service.CompleteStatusListener"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="flow27" sourceRef="judgeSettleAmount10000" targetRef="G000006">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow28" sourceRef="G000007" targetRef="G000008">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000008'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="G0000041" name="运营经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow29" sourceRef="G0000041" targetRef="judgeConsumTime"></sequenceFlow>
+    <sequenceFlow id="flow30" sourceRef="judgeSettleAmount2000" targetRef="G000004">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow31" sourceRef="G000004" targetRef="judgeSettleAmount10000"></sequenceFlow>
+    <sequenceFlow id="flow32" sourceRef="G000003" targetRef="G0000041"></sequenceFlow>
+    <userTask id="G000012" name="维修工程师确认">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow33" sourceRef="G000011" targetRef="G000012"></sequenceFlow>
+    <sequenceFlow id="flow34" sourceRef="G000012" targetRef="endevent2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='end'}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="judgeSettle2" name="判断结算金额" activiti:expression="${repairOrderService.judgeSettleAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <serviceTask id="judgeSettle5" name="判断结算金额" activiti:expression="${repairOrderService.judgeSettleAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <serviceTask id="judgeSettle10" name="判断结算金额" activiti:expression="${repairOrderService.judgeSettleAmount(entityId)}" activiti:resultVariableName="returnValue"></serviceTask>
+    <userTask id="G000013" name="结算-部门经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="G000014" name="结算-分管副总审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="G000015" name="结算-总经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.photo.pgm.core.service.RepairOrderListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.photo.pgm.core.service.RepairOrderStatusListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow35" sourceRef="G000012" targetRef="judgeSettle2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='judgeSettle2'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow36" sourceRef="judgeSettle2" targetRef="G000013">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow37" sourceRef="G000013" targetRef="judgeSettle5">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='judgeSettle5'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow38" sourceRef="judgeSettle5" targetRef="G000014">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow39" sourceRef="G000014" targetRef="judgeSettle10">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='judgeSettle10'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow40" sourceRef="judgeSettle10" targetRef="G000015">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow41" sourceRef="judgeSettle2" targetRef="endevent2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow42" sourceRef="judgeSettle5" targetRef="endevent2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow43" sourceRef="judgeSettle10" targetRef="endevent2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${returnValue == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow44" sourceRef="G000015" targetRef="endevent2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='end'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow46" sourceRef="G000014" targetRef="G000012">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000012'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow47" sourceRef="G000015" targetRef="G000012">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000012'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow48" sourceRef="G000013" targetRef="G000012">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000012'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow49" sourceRef="G000004" targetRef="G000002">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${transitionName=='G000002'}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_GeneralRepair">
+    <bpmndi:BPMNPlane bpmnElement="GeneralRepair" id="BPMNPlane_GeneralRepair">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="50.0" y="58.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000001" id="BPMNShape_G000001">
+        <omgdc:Bounds height="71.0" width="105.0" x="150.0" y="40.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000002" id="BPMNShape_G000002">
+        <omgdc:Bounds height="71.0" width="105.0" x="320.0" y="40.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000003" id="BPMNShape_G000003">
+        <omgdc:Bounds height="71.0" width="105.0" x="320.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000004" id="BPMNShape_G000004">
+        <omgdc:Bounds height="59.0" width="105.0" x="320.0" y="522.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeSettleAmount2000" id="BPMNShape_judgeSettleAmount2000">
+        <omgdc:Bounds height="55.0" width="111.0" x="317.0" y="440.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000008" id="BPMNShape_G000008">
+        <omgdc:Bounds height="55.0" width="105.0" x="550.0" y="260.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeConsumTime" id="BPMNShape_judgeConsumTime">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="341.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000005" id="BPMNShape_G000005">
+        <omgdc:Bounds height="55.0" width="105.0" x="150.0" y="341.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeSettleAmount50000" id="BPMNShape_judgeSettleAmount50000">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000006" id="BPMNShape_G000006">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="700.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeSettleAmount10000" id="BPMNShape_judgeSettleAmount10000">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="614.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000007" id="BPMNShape_G000007">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="880.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000009" id="BPMNShape_G000009">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="48.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000010" id="BPMNShape_G000010">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000011" id="BPMNShape_G000011">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="260.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
+        <omgdc:Bounds height="35.0" width="35.0" x="890.0" y="361.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G0000041" id="BPMNShape_G0000041">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="250.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000012" id="BPMNShape_G000012">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="351.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeSettle2" id="BPMNShape_judgeSettle2">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="440.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeSettle5" id="BPMNShape_judgeSettle5">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="612.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="judgeSettle10" id="BPMNShape_judgeSettle10">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000013" id="BPMNShape_G000013">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="524.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000014" id="BPMNShape_G000014">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="700.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G000015" id="BPMNShape_G000015">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="880.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="85.0" y="75.0"></omgdi:waypoint>
+        <omgdi:waypoint x="150.0" y="75.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="255.0" y="75.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="75.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="372.0" y="111.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="140.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="428.0" y="467.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="467.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="315.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="320.0" y="368.0"></omgdi:waypoint>
+        <omgdi:waypoint x="255.0" y="368.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="150.0" y="368.0"></omgdi:waypoint>
+        <omgdi:waypoint x="49.0" y="368.0"></omgdi:waypoint>
+        <omgdi:waypoint x="49.0" y="285.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="111.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="372.0" y="396.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="440.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="202.0" y="396.0"></omgdi:waypoint>
+        <omgdi:waypoint x="202.0" y="467.0"></omgdi:waypoint>
+        <omgdi:waypoint x="317.0" y="467.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
+        <omgdi:waypoint x="425.0" y="641.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="641.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="315.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow17" id="BPMNEdge_flow17">
+        <omgdi:waypoint x="320.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="49.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="49.0" y="285.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="111.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow18" id="BPMNEdge_flow18">
+        <omgdi:waypoint x="372.0" y="755.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="788.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
+        <omgdi:waypoint x="372.0" y="843.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="880.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="425.0" y="815.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="815.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="315.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow21" id="BPMNEdge_flow21">
+        <omgdi:waypoint x="320.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="50.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="50.0" y="484.0"></omgdi:waypoint>
+        <omgdi:waypoint x="50.0" y="284.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="111.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22">
+        <omgdi:waypoint x="602.0" y="260.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="75.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="75.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
+        <omgdi:waypoint x="792.0" y="103.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="158.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="792.0" y="213.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="260.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="372.0" y="669.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="700.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="425.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="602.0" y="315.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="372.0" y="305.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="341.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow30" id="BPMNEdge_flow30">
+        <omgdi:waypoint x="372.0" y="495.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="522.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow31" id="BPMNEdge_flow31">
+        <omgdi:waypoint x="372.0" y="581.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="614.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow32" id="BPMNEdge_flow32">
+        <omgdi:waypoint x="372.0" y="211.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="250.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow33" id="BPMNEdge_flow33">
+        <omgdi:waypoint x="792.0" y="315.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="351.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="845.0" y="378.0"></omgdi:waypoint>
+        <omgdi:waypoint x="890.0" y="378.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow35" id="BPMNEdge_flow35">
+        <omgdi:waypoint x="792.0" y="406.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="440.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
+        <omgdi:waypoint x="792.0" y="495.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="524.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
+        <omgdi:waypoint x="792.0" y="579.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="612.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow38" id="BPMNEdge_flow38">
+        <omgdi:waypoint x="792.0" y="667.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="700.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow39" id="BPMNEdge_flow39">
+        <omgdi:waypoint x="792.0" y="755.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="788.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow40" id="BPMNEdge_flow40">
+        <omgdi:waypoint x="792.0" y="843.0"></omgdi:waypoint>
+        <omgdi:waypoint x="792.0" y="880.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow41" id="BPMNEdge_flow41">
+        <omgdi:waypoint x="845.0" y="467.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="469.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="396.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow42" id="BPMNEdge_flow42">
+        <omgdi:waypoint x="845.0" y="639.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="639.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="396.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow43" id="BPMNEdge_flow43">
+        <omgdi:waypoint x="845.0" y="815.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="815.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="396.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow44" id="BPMNEdge_flow44">
+        <omgdi:waypoint x="845.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="907.0" y="396.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow46" id="BPMNEdge_flow46">
+        <omgdi:waypoint x="740.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="665.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="665.0" y="553.0"></omgdi:waypoint>
+        <omgdi:waypoint x="665.0" y="378.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="378.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow47" id="BPMNEdge_flow47">
+        <omgdi:waypoint x="740.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="664.0" y="907.0"></omgdi:waypoint>
+        <omgdi:waypoint x="664.0" y="378.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="378.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow48" id="BPMNEdge_flow48">
+        <omgdi:waypoint x="740.0" y="551.0"></omgdi:waypoint>
+        <omgdi:waypoint x="666.0" y="552.0"></omgdi:waypoint>
+        <omgdi:waypoint x="666.0" y="460.0"></omgdi:waypoint>
+        <omgdi:waypoint x="666.0" y="379.0"></omgdi:waypoint>
+        <omgdi:waypoint x="713.0" y="379.0"></omgdi:waypoint>
+        <omgdi:waypoint x="674.0" y="379.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="378.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow49" id="BPMNEdge_flow49">
+        <omgdi:waypoint x="320.0" y="551.0"></omgdi:waypoint>
+        <omgdi:waypoint x="51.0" y="551.0"></omgdi:waypoint>
+        <omgdi:waypoint x="51.0" y="283.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="111.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

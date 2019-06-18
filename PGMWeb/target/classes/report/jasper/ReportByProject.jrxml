@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportByProject" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="585" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" isFloatColumnFooter="true" resourceBundle="/report/report" uuid="be203690-fc2c-4045-91b1-db27c22d4b89">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="ChartDataSet" uuid="44adf85f-3c67-4b37-962a-764a399e7f74">
+		<parameter name="chartProjectId" class="java.lang.String"/>
+		<parameter name="chartLevel" class="java.lang.String"/>
+		<parameter name="chartAssetCategory" class="java.lang.String"/>
+		<parameter name="queryParams" class="java.lang.String">
+			<defaultValueExpression><![CDATA[com.photo.pgm.core.utils.ReportSQLUtils.getProjectConditions($P{chartProjectId},$P{chartLevel},$P{chartAssetCategory})]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select
+'已付款' as pay_type,
+sum(c.pay_amount) / sum(c.amount + adjust_amount) * 100 as paid_percent
+from project.contract c
+left join project.assets_category ac on c.assets_category = ac.id
+left join project.petrol_station ps on c.petrol_station = ps.id
+where c.active ='T' and c.contract_status='PendingArchive' $P!{queryParams}
+union
+select
+'未付款' as pay_type,
+sum(c.amount + adjust_amount - c.pay_amount) / sum(c.amount + adjust_amount) * 100 as paid_percent
+from project.contract c
+left join project.assets_category ac on c.assets_category = ac.id
+left join project.petrol_station ps on c.petrol_station = ps.id
+where  c.active ='T' and c.contract_status='PendingArchive' $P!{queryParams}]]>
+		</queryString>
+		<field name="pay_type" class="java.lang.String"/>
+		<field name="paid_percent" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="projectId" class="java.lang.String"/>
+	<parameter name="level" class="java.lang.String"/>
+	<parameter name="assetCategory" class="java.lang.String"/>
+	<parameter name="queryParams" class="java.lang.String">
+		<defaultValueExpression><![CDATA[com.photo.pgm.core.utils.ReportSQLUtils.getProjectConditions($P{projectId},$P{level},$P{assetCategory})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ps.name as projec_name,
+ac.name as ac_name,
+sum(c.amount) as amount,
+sum(c.amount + adjust_amount) as settle_amount,
+sum(c.pay_amount) as pay_amount,
+sum(c.amount + adjust_amount - c.pay_amount) as un_paid_amount,
+sum(c.pay_amount) / sum(c.amount + adjust_amount) * 100 as paid_amount_percent,
+sum(c.amount + adjust_amount - c.pay_amount) / sum(c.amount + adjust_amount) * 100 as un_paid_amount_percent
+from project.contract c
+left join project.assets_category ac on c.assets_category = ac.id
+left join project.petrol_station ps on c.petrol_station = ps.id
+where c.active ='T' and c.contract_status='PendingArchive' $P!{queryParams}
+group by ps.name,ac.name order by ps.name,ac.name]]>
+	</queryString>
+	<field name="projec_name" class="java.lang.String"/>
+	<field name="ac_name" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="settle_amount" class="java.lang.Double"/>
+	<field name="pay_amount" class="java.lang.Double"/>
+	<field name="un_paid_amount" class="java.lang.Double"/>
+	<field name="paid_amount_percent" class="java.lang.Double"/>
+	<field name="un_paid_amount_percent" class="java.lang.Double"/>
+	<variable name="amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="settle_amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{settle_amount}]]></variableExpression>
+	</variable>
+	<variable name="pay_amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay_amount}]]></variableExpression>
+	</variable>
+	<variable name="un_paid_amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{un_paid_amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="39" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="585" height="39" uuid="2265f748-7fbb-4c15-b515-ccffc7c004e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ProjectReport}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="135" y="0" width="80" height="20" uuid="63826c49-8b8f-40a1-8714-4afb17f9b2a2"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ACName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="215" y="0" width="70" height="20" uuid="05d0abfd-7c61-4244-a610-ab3b8b8a8916"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.CAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="285" y="0" width="80" height="20" uuid="4404ff5c-91c2-4c1e-903d-f033a89ef77d"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.CSettleAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="365" y="0" width="80" height="20" uuid="9dbd6227-265a-4f80-a387-418570224d05"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.PayAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="445" y="0" width="70" height="20" uuid="23919ef9-3489-4e23-bb42-66568ee87d48"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.CUnPaidAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="515" y="0" width="70" height="20" uuid="a20e358b-efc9-4a7f-83c3-554febb1f5b0"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.UnPaidPercent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="80" height="20" uuid="3de81473-ceba-4135-bc81-5fd4a40e78f3"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.ProjectName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="20" uuid="86a8dd05-4502-46da-b409-49a18d9af2de"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.SEQ}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="135" y="0" width="80" height="20" isRemoveLineWhenBlank="true" uuid="34792df6-0a04-4ab5-8527-5502e3be59d0"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ac_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="215" y="0" width="70" height="20" isRemoveLineWhenBlank="true" uuid="a9e95a8b-e5ad-4113-be7c-e65a048f549d"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="285" y="0" width="80" height="20" isRemoveLineWhenBlank="true" uuid="3e6cc060-f575-4081-acf2-7f82d512713c"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{settle_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="365" y="0" width="80" height="20" isRemoveLineWhenBlank="true" uuid="a6ae420a-c5f2-4cbe-b24a-472a8acba330"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{pay_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="445" y="0" width="70" height="20" isRemoveLineWhenBlank="true" uuid="4ea44c06-80c6-46bb-aa1e-293fde5f31ad"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{un_paid_amount})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="515" y="0" width="70" height="20" isRemoveLineWhenBlank="true" uuid="6d60a170-77e8-40b7-a3c0-f234882b9efb"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{un_paid_amount_percent})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="80" height="20" isRemoveLineWhenBlank="true" uuid="f625e3f5-8c5e-43b3-b4c1-a75f4b8c99fb"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{projec_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="20" isRemoveLineWhenBlank="true" uuid="ae7f5dec-a76f-4797-ad19-04f9301c8b05"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="226">
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="215" y="0" width="70" height="20" uuid="fb38cf23-ecc3-42ee-b581-20554bbcf779"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="285" y="0" width="80" height="20" uuid="8f84247c-8435-4526-b8b5-fda21f881fde"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{settle_amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="365" y="0" width="80" height="20" uuid="c9af6863-1deb-42a7-ac8a-622c416499a2"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{pay_amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="445" y="0" width="70" height="20" uuid="138b2846-7483-49f7-9835-e827cb075f1e"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{un_paid_amount_1})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="515" y="0" width="70" height="20" uuid="fb86d675-878e-44c3-bba9-90d673fa1552"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($V{un_paid_amount_1}/$V{settle_amount_1}*100)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="215" height="20" uuid="49412142-673e-4dde-bb2b-39b59db89899"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{RT.TOTALS}]]></textFieldExpression>
+			</textField>
+			<pieChart>
+				<chart>
+					<reportElement x="135" y="45" width="230" height="175" uuid="6e5bc56f-4163-4658-b336-ae5112d3cdff">
+						<printWhenExpression><![CDATA[$V{REPORT_COUNT} > 0]]></printWhenExpression>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="ChartDataSet" uuid="030068ed-6dd8-47e6-a832-4f8c927ef80d">
+							<datasetParameter name="chartProjectId">
+								<datasetParameterExpression><![CDATA[$P{projectId}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="chartLevel">
+								<datasetParameterExpression><![CDATA[$P{level}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="chartAssetCategory">
+								<datasetParameterExpression><![CDATA[$P{assetCategory}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{pay_type}]]></keyExpression>
+					<valueExpression><![CDATA[$F{paid_percent}]]></valueExpression>
+				</pieDataset>
+				<piePlot labelFormat="{0} {2}" legendLabelFormat="{0}">
+					<plot/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>

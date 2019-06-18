@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <fn id="KF01">
+     	<resource id="newBtn" key="Com.New1" category="button" />
+    </fn>
+    <fn id="GC10">
+    	<resource id="newBtn" key="Com.New1" category="button" />
+    	<resource id="pendingSendBtn" key="Com.PendingSend" category="button" />
+    	<resource id="archiveBtn" key="Com.ArchiveFile" category="button" />
+    </fn>
+    <fn id="HR01">
+    	<resource id="newBtn" key="Com.New1" category="button" />
+    	<resource id="resetUserBtn" key="Com.ResetUserName" category="button" />
+    </fn>
+    <fn id="GC30">
+    	<resource id="newBtn" key="Com.New1" category="button" />
+    	<resource id="approveBtn" key="Com.Confirm" category="button" />
+    	<resource id="rejectBtn" key="Com.Reject" category="button" />
+    	<resource id="approveGeneralPortal" key="Com.PayConfirm" category="portlet" />
+    </fn>
+    <fn id="GC12">
+    	<resource id="newBtn" key="Com.New1" category="button" />
+    </fn>
+    <fn id="GC20">
+    	<resource id="newBtn" key="Com.New1" category="button" />
+    	<resource id="pendingSendBtn" key="Com.SubmitRequest" category="button" />
+    </fn>
+    <fn id="GC21">
+    	<resource id="newBtn" key="Com.New1" category="button" />
+    </fn>
+</root>
