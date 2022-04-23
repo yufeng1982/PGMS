@@ -9,7 +9,7 @@
   <description>BAS Core Lib</description>
   
   	<properties>
-		<spring.version>4.0.6.RELEASE</spring.version><!-- 3.1.2 -->
+		<spring.version>5.3.19</spring.version><!-- 3.1.2 -->
 		<hibernate.version>4.3.6.Final</hibernate.version><!-- 4.1.7 -->
 		<spring-data-jpa.version>1.6.2.RELEASE</spring-data-jpa.version><!-- 1.2.1.RELEASE -->
 		<commons-dbcp.version>1.4</commons-dbcp.version>
